@@ -1,6 +1,6 @@
 import numpy as np
 import torch
-from .get_nets import PNet, RNet, ONet
+
 from .box_utils import nms, calibrate_box, get_image_boxes, convert_to_square
 from .first_stage import run_first_stage
 
@@ -56,6 +56,8 @@ def detect_faces(image, models, device, min_face_size=20.0, thresholds=[0.6, 0.7
 
     # collect boxes (and offsets, and scores) from different scales
     bounding_boxes = [i for i in bounding_boxes if i is not None]
+    if len(bounding_boxes) == 0:
+        return [], []
     bounding_boxes = np.vstack(bounding_boxes)
 
     keep = nms(bounding_boxes[:, 0:5], nms_thresholds[0])
